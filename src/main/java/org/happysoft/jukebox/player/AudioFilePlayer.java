@@ -67,6 +67,7 @@ public class AudioFilePlayer implements Runnable {
   }
 
   public void resume() {
+    paused = false;
     fireMediaEvent(AudioFileEvent.PlaybackStatus.MEDIA_RESUMED);
   }
 
