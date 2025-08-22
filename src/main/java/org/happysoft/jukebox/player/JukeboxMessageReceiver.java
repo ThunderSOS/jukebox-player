@@ -42,41 +42,39 @@ public class JukeboxMessageReceiver {
     queue = context.createQueue(queueName);
   }
 
-  public void startReceiving() {
-    try {
-      final Connection connection = connectionFactory.createConnection();
-      final Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-      final MessageConsumer messageConsumer = session.createConsumer(queue);
+  public void startReceiving(MessageConsumer messageConsumer) throws JMSException {
+    while (alive) {
+      final Message jmsMessage = messageConsumer.receive(10000L);
+      if (jmsMessage != null) {
+        System.out.println("Received message ");
+        JukeboxMessage message = jmsMessage.getBody(JukeboxMessage.class);
 
-      connection.start();
-      
-      while (alive) {
-        final Message jmsMessage = messageConsumer.receive(10000L);
-        if (jmsMessage != null) {
-          System.out.println("Received message ");
-          JukeboxMessage message = jmsMessage.getBody(JukeboxMessage.class);
-
-          if (message instanceof AddToQueueMessage addToQueueMessage) {
-            Request req = addToQueueMessage.getRequest();
-            System.out.println("adding " + req.getTrack().getTrackName());
-            Playlist.getPlayList().addSelection(req);
-          }
-          if (message instanceof PauseMessage) {
-            player.pause();
-          }
-          if (message instanceof PlayMessage) {
-            player.resume();
-          }
-          if (message instanceof StopMessage) {
-            player.stopCurrentRequest();
-          }
-          jmsMessage.acknowledge();
+        if (message instanceof AddToQueueMessage addToQueueMessage) {
+          Request req = addToQueueMessage.getRequest();
+          System.out.println("adding " + req.getTrack().getTrackName());
+          Playlist.getPlayList().addSelection(req);
         }
+        if (message instanceof PauseMessage) {
+          player.pause();
+        }
+        if (message instanceof PlayMessage) {
+          player.resume();
+        }
+        if (message instanceof StopMessage) {
+          player.stopCurrentRequest();
+        }
+        jmsMessage.acknowledge();
       }
-
-    } catch (final JMSException e) {
-      
     }
+  }
+
+  public MessageConsumer createConsumer() throws JMSException {
+    final Connection connection = connectionFactory.createConnection();
+    final Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+    final MessageConsumer messageConsumer = session.createConsumer(queue);
+    connection.start();
+    System.out.println("JMS connected");
+    return messageConsumer;
   }
   
   public void stop() {
