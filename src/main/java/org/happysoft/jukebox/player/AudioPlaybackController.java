@@ -38,9 +38,8 @@ public class AudioPlaybackController implements AudioPlaybackListener {
         jmsReceiver.startReceiving(consumer);
 
       } catch (JMSException jmse) {
-        jmse.printStackTrace();
         System.out.println("JMSException caught, " + jmse.getMessage());
-        System.out.println("Sleep for 10 seconds then rety");
+        System.out.println("Sleep for 10 seconds then retry");
         try {
           Thread.sleep(10000L);
         } catch (InterruptedException ie) {
@@ -48,7 +47,6 @@ public class AudioPlaybackController implements AudioPlaybackListener {
           System.exit(-1);
         }
       }
-
     } 
   }
 

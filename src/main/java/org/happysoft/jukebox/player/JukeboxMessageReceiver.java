@@ -13,6 +13,7 @@ import org.happysoft.jukebox.messaging.AddToQueueMessage;
 import org.happysoft.jukebox.messaging.JukeboxMessage;
 import org.happysoft.jukebox.messaging.PauseMessage;
 import org.happysoft.jukebox.messaging.PlayMessage;
+import org.happysoft.jukebox.messaging.RemoveFromQueueMessage;
 import org.happysoft.jukebox.messaging.StopMessage;
 import org.happysoft.jukebox.model.Request;
 
@@ -62,6 +63,9 @@ public class JukeboxMessageReceiver {
         }
         if (message instanceof StopMessage) {
           player.stopCurrentRequest();
+        }
+        if (message instanceof RemoveFromQueueMessage removeFromQueueMessage) {
+          Playlist.getPlayList().removeSelection(removeFromQueueMessage.getRequestId());
         }
         jmsMessage.acknowledge();
       }

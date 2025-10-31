@@ -1,6 +1,7 @@
 package org.happysoft.jukebox.player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.happysoft.jukebox.model.Request;
 
@@ -23,8 +24,14 @@ public class Playlist {
     queue.add(request);
   }
 
-  public void removeSelection(Request request) {
-    queue.remove(request);
+  public void removeSelection(long requestId) {
+    Iterator<Request> iter = queue.iterator();
+    while(iter.hasNext()) {
+      Request r = iter.next();
+      if(r.getRequestId() == requestId) {
+        iter.remove();
+      }
+    }
   }
 
   public Request getNextSelection() {
