@@ -46,9 +46,9 @@ public class JukeboxMessageReceiver {
   public void startReceiving(MessageConsumer messageConsumer) throws JMSException {
     while (alive) {
       final Message jmsMessage = messageConsumer.receive(10000L);
-      if (jmsMessage != null) {
-        System.out.println("Received message ");
+      if (jmsMessage != null) {        
         JukeboxMessage message = jmsMessage.getBody(JukeboxMessage.class);
+        System.out.println("Received message - " + message.getClass());
 
         if (message instanceof AddToQueueMessage addToQueueMessage) {
           Request req = addToQueueMessage.getRequest();
