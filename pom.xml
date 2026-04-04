@@ -38,6 +38,12 @@
             <version>1.5.2</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.tianscar.javasound</groupId>
+            <artifactId>javasound-aac</artifactId>
+            <version>0.9.8</version>
+        </dependency>
+        
         <!-- JAX-RS client API -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
