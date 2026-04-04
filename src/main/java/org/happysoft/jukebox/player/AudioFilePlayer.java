@@ -13,7 +13,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED;
+import static javax.sound.sampled.AudioFormat.Encoding.*;
 
 import org.happysoft.jukebox.model.Request;
 import org.happysoft.jukebox.model.Track;
@@ -90,7 +90,8 @@ public class AudioFilePlayer implements Runnable {
     try {
       fireMediaEvent(AudioFileEvent.PlaybackStatus.MEDIA_STARTED);
       fileInputStream = AudioSystem.getAudioInputStream(file);
-      audioFormat = getOutputFormat(fileInputStream.getFormat());
+      boolean bigEndian = file.getName().endsWith(".m4a");
+      audioFormat = getOutputFormat(fileInputStream.getFormat(), bigEndian);
       playViaSourceDataLine();
 
     } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
@@ -123,10 +124,10 @@ public class AudioFilePlayer implements Runnable {
     }
   }
 
-  private AudioFormat getOutputFormat(AudioFormat inFormat) {
+  private AudioFormat getOutputFormat(AudioFormat inFormat, boolean bigEndian) {
     int ch = inFormat.getChannels();
     float rate = inFormat.getSampleRate();
-    return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
+    return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, bigEndian);
   }
 
   private void playStream() throws IOException {
