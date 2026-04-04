@@ -32,6 +32,12 @@
             <version>1.0.3-2</version> 
         </dependency> 
         
+        <dependency>
+            <groupId>org.jflac</groupId>
+            <artifactId>jflac-codec</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+        
         <!-- JAX-RS client API -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
